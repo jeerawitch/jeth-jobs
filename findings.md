@@ -25,7 +25,7 @@
 | Supabase RLS | Unindexed FK columns in policies cause severe query degradation at scale | ⚠️ Add explicit indexes on `user_id`, `org_id`, `job_id` |
 | Supabase Storage | Buckets have their own separate RLS policies — storage policies must mirror DB RBAC | 🔴 Critical — must implement storage policies for resume/logo buckets |
 | Supabase REST `GET /rest/v1/` | Returns **HTTP 401** with anon key — root requires `service_role`. Use table-specific endpoints (e.g., `/rest/v1/profiles`) for anon-key queries. Auth ✅ and Storage ✅ endpoints work fine with anon key. | ⚠️ Update verify script to test a table endpoint, not the root |
-| Python unavailable on host | `python` command not found — Microsoft Store alias only | 🔄 All tools rewritten in **Node.js** (v22.15.0 confirmed) |
+| Python unavailable on host | `python` command not found — Microsoft Store alias only | 🔄 Rewrite tools in **Node.js** (v22.15.0) |
 | npm PowerShell policy | `npm.ps1` blocked by ExecutionPolicy — use `node` directly or `cmd` for npm | ⚠️ Use `node -e` for inline scripts; scaffold Vite via `cmd /c npm` |
 
 ---
@@ -103,7 +103,7 @@ CREATE TRIGGER on_auth_user_created
 | Date | Error | Root Cause | Fix Applied | Architecture Updated? |
 |---|---|---|---|---|
 | 2026-10-20 | `GET /rest/v1/` → HTTP 401 with anon key | Supabase REST root requires `service_role`; anon key only works on table endpoints | Changed verify script to use Auth/Storage health endpoints + direct DB via MCP | ✅ Logged in findings.md |
-| 2026-10-20 | `python` command not found | Python not installed; Windows Store alias present | Rewrote tools as Node.js scripts (v22.15.0 available) | ✅ tools/ will use `.js` going forward |
+| 2026-10-21 | `verify_supabase.py` couldn't run (Python not installed) | Python not installed; logged as 'fixed' prematurely before actual rewrite | Created `tools/verify_supabase.js` (Node.js). Original `.py` kept as reference. | ✅ |
 | 2026-10-20 | `npm.ps1` PowerShell ExecutionPolicy blocked | System script policy prevents running npm.ps1 | Use `cmd /c npm` or `node` directly | ✅ Logged |
 
 ---
