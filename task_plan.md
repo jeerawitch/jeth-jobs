@@ -1,6 +1,6 @@
 # 📋 task_plan.md — Mission Blueprint
-> **Status:** 🟢 ACTIVE — Phase 2: Link in progress
-> **Last Updated:** 2026-10-20
+> **Status:** 🟢 ACTIVE — Phase 3: Architect in progress
+> **Last Updated:** 2026-10-22
 > **Protocol:** B.L.A.S.T. v1.0
 
 ---
@@ -12,7 +12,7 @@
 | **0** | Initialization | ✅ COMPLETE | Memory files created |
 | **1** | Blueprint (B) | ✅ COMPLETE | User approved 2026-10-20 |
 | **2** | Link (L) | ✅ COMPLETE | All services verified 2026-10-20 |
-| **3** | Architect (A) | 🟡 IN PROGRESS | Building schema migrations + frontend |
+| **3** | Architect (A) | 🟡 IN PROGRESS | SOPs ✅ Migrations ✅ Frontend scaffold 🔴 |
 | **4** | Stylize (S) | 🔴 BLOCKED | Phase 3 complete |
 | **5** | Trigger (T) | 🔴 BLOCKED | Phase 4 approved |
 
@@ -56,19 +56,39 @@
 
 ---
 
-## ⚙️ Phase 3: Architect — 🔴 BLOCKED
+## ⚙️ Phase 3: Architect — 🟡 IN PROGRESS
 
-### Layer 1 — Architecture SOPs
-- [ ] SOP documents created in `architecture/`
-- [ ] Edge cases documented
+### Layer 1 — Architecture SOPs ✅ COMPLETE (2026-10-22)
+- [x] `architecture/00_overview.md` — System architecture & directory map
+- [x] `architecture/01_auth.md` — Auth, RBAC, SECURITY DEFINER patterns
+- [x] `architecture/02_database.md` — Schema, RLS policy matrix, indexes
+- [x] `architecture/03_job_listings.md` — Job listing CRUD SOP
+- [x] `architecture/04_applications.md` — Application flow + saved jobs SOP
+- [x] `architecture/05_frontend.md` — UI/UX, routing, design system SOP
 
-### Layer 2 — Navigation (Decision Logic)
-- [ ] Routing logic defined
-- [ ] Tool execution order specified
+### Layer 2 — SQL Migrations ✅ COMPLETE (2026-10-22)
+- [x] `migrations/001_create_extensions.sql`
+- [x] `migrations/002_create_profiles.sql` (+ auth trigger)
+- [x] `migrations/003_create_employer_profiles.sql`
+- [x] `migrations/004_create_job_seeker_profiles.sql`
+- [x] `migrations/005_create_job_listings.sql`
+- [x] `migrations/006_create_applications.sql`
+- [x] `migrations/007_create_saved_jobs.sql`
+- [x] `migrations/008_rls_policies.sql`
+- [x] `migrations/009_security_definer_functions.sql`
+- [x] `migrations/010_storage_buckets.sql`
+- [x] `tools/migrate_schema.js` — Migration runner
 
-### Layer 3 — Tools
-- [ ] All scripts in `tools/` created and tested
-- [ ] Each tool is atomic and independently testable
+### Layer 3 — Apply Migrations to Supabase 🔴 TODO
+- [ ] Apply migrations 001–010 via Supabase MCP execute_sql
+- [ ] Verify tables exist in Supabase dashboard
+- [ ] Verify auth trigger fires on test signup
+- [ ] Verify RLS blocks unauthorized access
+
+### Layer 4 — Frontend Scaffold 🔴 TODO
+- [ ] Scaffold Vite project in `src/`
+- [ ] Implement design system (CSS tokens)
+- [ ] Build core pages (Home, Job Detail, Login, Dashboards)
 
 ---
 
