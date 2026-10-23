@@ -34,7 +34,7 @@
 - [x] **Q1 — North Star:** Job search platform — seekers find/apply, employers post/recruit
 - [x] **Q2 — Integrations:** Supabase only (DB + Auth + Storage). No other keys yet.
 - [x] **Q3 — Source of Truth:** Supabase PostgreSQL — employer listings + seeker profiles/applications
-- [x] **Q4 — Delivery Payload:** Responsive web frontend (HTML/CSS/JS + Vite) + Supabase cloud
+- [x] **Q4 — Delivery Payload:** Responsive web frontend (React + Vite) + Supabase cloud
 - [x] **Q5 — Behavioral Rules:** RLS on all tables, RBAC (Admin/Employer/Seeker), no duplicates, no PII exposure, no API key leaks
 
 ### Gate Checklist (DO NOT PROCEED WITHOUT ALL ✅)
@@ -86,8 +86,10 @@
 - [ ] Verify RLS blocks unauthorized access
 
 ### Layer 4 — Frontend Scaffold 🔴 TODO
-- [ ] Scaffold Vite project in `src/`
-- [ ] Implement design system (CSS tokens)
+- [ ] Scaffold React + Vite project (`cmd /c npm create vite@latest -- --template react`)
+- [ ] Install `@supabase/supabase-js` and `react-router-dom`
+- [ ] Add `AuthContext` + `ProtectedRoute` and the router (see `05_frontend.md`)
+- [ ] Implement design system (CSS tokens in `index.css`)
 - [ ] Build core pages (Home, Job Detail, Login, Dashboards)
 
 ---
