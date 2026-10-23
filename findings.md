@@ -112,7 +112,7 @@ CREATE TRIGGER on_auth_user_created
 
 | Decision | Alternatives Considered | Rationale |
 |---|---|---|
-| Vanilla HTML/CSS/JS (or Vite) | Next.js, Nuxt | User spec says no framework unless explicitly requested. MVP with Vite for module support. |
+| React + Vite (SPA) | Vanilla JS, Next.js | User explicitly requested React (2026-10-23). Vite keeps `VITE_SUPABASE_*` env vars and static hosting. Next.js rejected for MVP: needs SSR, cookie-based sessions (`@supabase/ssr`) and a Node host. |
 | Roles in `profiles` table | `raw_user_meta_data` JWT claims | JWT metadata can be spoofed by users. DB-level roles with RLS are tamper-proof. |
 | `SECURITY DEFINER` helper functions | Inline subqueries in every policy | Prevents recursion, improves RLS query performance significantly. |
 | Unique DB constraints for deduplication | App-level validation | DB constraints are the last line of defense — cannot be bypassed by bad clients. |

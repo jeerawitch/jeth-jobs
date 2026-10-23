@@ -11,7 +11,7 @@
 |---|---|
 | **Project Name** | JobBoard — Modern Job Search Platform |
 | **North Star Goal** | A responsive web platform where job seekers find & apply for jobs, and employers post listings & recruit candidates |
-| **Primary Stack** | HTML / CSS / JavaScript (Vanilla or Vite) + Supabase |
+| **Primary Stack** | React + Vite (JavaScript) + Supabase |
 | **Database** | Supabase PostgreSQL |
 | **Auth** | Supabase Auth (email/password + role-based) |
 | **Storage** | Supabase Storage (resumes, company logos) |
@@ -198,7 +198,7 @@ SUPABASE_ANON_KEY=your-anon-key
 │   ├── migrate_schema.py   # Apply DB migrations
 │   └── seed_data.py        # Seed test data
 ├── .tmp/                   # Ephemeral workspace
-└── src/                    # Frontend source (HTML/CSS/JS or Vite)
+└── src/                    # Frontend source (React + Vite)
 ```
 
 ---
@@ -209,3 +209,4 @@ SUPABASE_ANON_KEY=your-anon-key
 |---|---|---|
 | 2026-10-20 | Project Constitution initialized | System Pilot |
 | 2026-10-20 | Discovery Q&A completed — full schema defined | System Pilot |
+| 2026-10-23 | Frontend stack changed from Vanilla JS to React + Vite (user request) | System Pilot |
