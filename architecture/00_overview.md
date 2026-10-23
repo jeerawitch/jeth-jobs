@@ -19,7 +19,7 @@ A responsive web platform where:
 ```
 ┌─────────────────────────────────────────────────────┐
 │                   FRONTEND (Browser)                │
-│   Vite + Vanilla HTML/CSS/JS                        │
+│   React + Vite (SPA, React Router)                  │
 │                                                     │
 │  ┌─────────┐  ┌──────────────┐  ┌───────────────┐  │
 │  │  Public │  │  Job Seeker  │  │   Employer    │  │
@@ -47,8 +47,8 @@ A responsive web platform where:
 
 | Layer | Technology | Notes |
 |---|---|---|
-| **Frontend** | Vite + Vanilla JS | ES Modules, no heavy framework |
-| **Styling** | Vanilla CSS | CSS custom properties (design tokens) |
+| **Frontend** | React 18 + Vite | SPA, function components + hooks, React Router v6 |
+| **Styling** | Plain CSS | CSS custom properties (design tokens), global `index.css` |
 | **Auth** | Supabase Auth | Email/password, session persistence |
 | **Database** | Supabase PostgreSQL 17 | RLS ON, SECURITY DEFINER helpers |
 | **Storage** | Supabase Storage | Private buckets with bucket-level RLS |
@@ -91,10 +91,14 @@ init-project/
 │   ├── 009_security_definer_functions.sql
 │   └── 010_storage_buckets.sql
 │
-└── src/                         # Frontend (Vite scaffold — Phase 3 Layer 3)
-    ├── index.html
-    ├── main.js
-    └── style.css
+└── src/                         # Frontend (React + Vite scaffold — Phase 3 Layer 4)
+    ├── main.jsx                 # React entry, mounts <App />
+    ├── App.jsx                  # Router + AuthProvider
+    ├── index.css                # Design tokens & global styles
+    ├── lib/supabase.js          # Supabase client (anon key)
+    ├── context/AuthContext.jsx  # Session + role, useAuth() hook
+    ├── components/              # Navbar, JobCard, DashboardSidebar, ProtectedRoute
+    └── pages/                   # One component per route
 ```
 
 ---

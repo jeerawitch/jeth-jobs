@@ -34,38 +34,65 @@ Define the frontend architecture, page structure, routing logic, and UI/UX guide
 
 ## 🔄 Client-Side Routing
 
-Using hash-based routing (no server config needed for MVP):
+Using React Router v6 with lazy-loaded pages. The static host must rewrite all paths to `index.html` (SPA fallback); Vite's dev server already does this.
 
-```javascript
-// src/router.js
-const routes = {
-  '/':                          () => import('./pages/home.js'),
-  '/jobs/:id':                  () => import('./pages/job-detail.js'),
-  '/login':                     () => import('./pages/login.js'),
-  '/dashboard/seeker':          () => import('./pages/seeker-dashboard.js'),
-  '/dashboard/employer':        () => import('./pages/employer-dashboard.js'),
-  // ... etc
+```jsx
+// src/App.jsx
+import { lazy, Suspense } from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+
+const Home              = lazy(() => import('./pages/Home'))
+const JobDetail         = lazy(() => import('./pages/JobDetail'))
+const Login             = lazy(() => import('./pages/Login'))
+const SeekerDashboard   = lazy(() => import('./pages/SeekerDashboard'))
+const EmployerDashboard = lazy(() => import('./pages/EmployerDashboard'))
+// ... etc
+
+const router = createBrowserRouter([
+  { path: '/',         element: <Home /> },
+  { path: '/jobs/:id', element: <JobDetail /> },
+  { path: '/login',    element: <Login /> },
+  {
+    path: '/dashboard/seeker',
+    element: <ProtectedRoute role="job_seeker" />,
+    children: [{ index: true, element: <SeekerDashboard /> } /* applications, saved, profile */],
+  },
+  {
+    path: '/dashboard/employer',
+    element: <ProtectedRoute role="employer" />,
+    children: [{ index: true, element: <EmployerDashboard /> } /* listings, applicants, profile */],
+  },
+])
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Suspense fallback={null}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </AuthProvider>
+  )
 }
-
-async function navigate(path) {
-  const { session } = (await supabase.auth.getSession()).data
-  const protectedRoutes = ['/dashboard']
-  
-  const isProtected = protectedRoutes.some(r => path.startsWith(r))
-  if (isProtected && !session) {
-    return navigate('/login')
-  }
-
-  // Load and render page module
-  const matchedRoute = matchRoute(path, routes)
-  const pageModule = await matchedRoute.loader()
-  pageModule.render(document.getElementById('app'), matchedRoute.params)
-}
-
-window.addEventListener('hashchange', () => {
-  navigate(location.hash.slice(1) || '/')
-})
 ```
+
+```jsx
+// src/components/ProtectedRoute.jsx
+import { Navigate, Outlet } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+
+export default function ProtectedRoute({ role }) {
+  const { session, role: userRole, loading } = useAuth()
+
+  if (loading) return null
+  if (!session) return <Navigate to="/login" replace />
+  if (role && userRole && userRole !== role) return <Navigate to="/dashboard" replace />
+  return <Outlet />
+}
+```
+
+`/dashboard` renders a small component that reads `role` from `useAuth()` and redirects to the matching dashboard. `ProtectedRoute` is UX only: RLS remains the real access control.
 
 ---
 
@@ -125,13 +152,15 @@ p  { font-size: 1rem;     line-height: 1.6; }
 
 ## 📐 Layout Components
 
-### Navigation Bar
+Each block below is a React component in `src/components/`.
+
+### Navigation Bar (`Navbar.jsx`)
 - Logo + brand name (left)
 - Search bar (center, home page only)
 - Auth buttons or user menu (right)
 - Sticky, glass-morphism effect on scroll
 
-### Job Card (Browse Grid)
+### Job Card (`JobCard.jsx`, Browse Grid)
 ```
 ┌────────────────────────────────────┐
 │ 🏢 [Company Logo]  Company Name   │
@@ -143,7 +172,7 @@ p  { font-size: 1rem;     line-height: 1.6; }
 └────────────────────────────────────┘
 ```
 
-### Dashboard Sidebar
+### Dashboard Sidebar (`DashboardSidebar.jsx`)
 - Profile avatar + name
 - Navigation links (role-specific)
 - Sign out button

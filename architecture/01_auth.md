@@ -188,12 +188,47 @@ if (profile.role === 'employer') { /* employer dashboard */ }
 if (profile.role === 'job_seeker') { /* seeker dashboard */ }
 ```
 
-### Auth State Listener (app-wide)
-```javascript
-supabase.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_IN') { /* update UI */ }
-  if (event === 'SIGNED_OUT') { /* redirect to home */ }
-})
+### Auth State in React (`src/context/AuthContext.jsx`)
+
+One app-wide listener lives in `AuthProvider`; components read session and role with `useAuth()`.
+
+```jsx
+import { createContext, useContext, useEffect, useState } from 'react'
+import { supabase } from '../lib/supabase'
+
+const AuthContext = createContext(null)
+
+export function AuthProvider({ children }) {
+  const [session, setSession] = useState(null)
+  const [role, setRole] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      setLoading(false)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // Role always comes from the profiles table, never from user_metadata
+  useEffect(() => {
+    if (!session) { setRole(null); return }
+    supabase.from('profiles').select('role').single()
+      .then(({ data }) => setRole(data?.role ?? null))
+  }, [session])
+
+  return (
+    <AuthContext.Provider value={{ session, role, loading }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export const useAuth = () => useContext(AuthContext)
 ```
 
 ---
